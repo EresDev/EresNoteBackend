@@ -2,7 +2,6 @@
 
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\ORM\Mapping as ORM;
 
 
@@ -11,7 +10,6 @@ use Doctrine\ORM\Mapping as ORM;
  *
  * @ORM\Table(name="note", indexes={@ORM\Index(name="user_id", columns={"user_id"})})
  * @ORM\Entity
- * @ApiResource
  */
 class Note
 {

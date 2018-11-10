@@ -1,6 +1,10 @@
 # api/config/api_platform/resources.yaml
 resources:
-    App\Entity\User: ~
+    App\Entity\User:
+      collectionOperations:
+        get: ~
+      itemOperations:
+        get: ~
     App\Entity\Note:
         shortName: 'Note'                   # optional
         description: 'Saved notes of the user.' # optional

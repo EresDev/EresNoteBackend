@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * User
@@ -10,7 +11,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(name="user")
  * @ORM\Entity
  */
-class User
+class User implements UserInterface
 {
     /**
      * @var int
@@ -29,11 +30,11 @@ class User
     private $email;
 
     /**
-     * @var binary
+     * @var string
      *
-     * @ORM\Column(name="passw", type="binary", nullable=false)
+     * @ORM\Column(name="password", type="string", length=500, nullable=false)
      */
-    private $passw;
+    private $password;
 
     /**
      * @var bool
@@ -59,21 +60,21 @@ class User
         return $this->email;
     }
 
-    public function setEmail(string $email): self
+    public function setEmail(string $username): self
     {
-        $this->email = $email;
+        $this->email = $username;
 
         return $this;
     }
 
-    public function getPassw()
+    public function getPassword(): ?string
     {
-        return $this->passw;
+        return $this->password;
     }
 
-    public function setPassw($passw): self
+    public function setPassword(string $password): self
     {
-        $this->passw = $passw;
+        $this->password = $password;
 
         return $this;
     }
@@ -103,4 +104,32 @@ class User
     }
 
 
+
+
+    public function getRoles()
+    {
+        return array('ROLE_USER');
+    }
+
+    public function getSalt()
+    {
+        return "";
+    }
+
+    public function eraseCredentials()
+    {
+        // TODO: Implement eraseCredentials() method.
+    }
+
+    public function __construct($username, $password, $salt, array $roles)
+    {
+        $this->email = $username;
+        $this->password = $password;
+        $this->salt = $salt;
+        $this->roles = array('ROLE_USER');
+    }
+    public function getUsername()
+    {
+        return $this->getEmail();
+    }
 }

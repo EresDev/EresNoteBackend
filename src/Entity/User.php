@@ -8,7 +8,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 /**
  * User
  *
- * @ORM\Table(name="user")
+ * @ORM\Table(name="user", uniqueConstraints={@ORM\UniqueConstraint(name="email", columns={"email"})})
  * @ORM\Entity
  */
 class User implements UserInterface
@@ -50,6 +50,15 @@ class User implements UserInterface
      */
     private $deleted = '0';
 
+
+    /**
+     * @var string
+     *
+     * This field is just for validation
+     * It is not stored in database
+     */
+//    private plainPassword;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -60,9 +69,9 @@ class User implements UserInterface
         return $this->email;
     }
 
-    public function setEmail(string $username): self
+    public function setEmail(string $email): self
     {
-        $this->email = $username;
+        $this->email = $email;
 
         return $this;
     }
@@ -79,7 +88,7 @@ class User implements UserInterface
         return $this;
     }
 
-    public function getActive(): ?bool
+    public function isActive(): ?bool
     {
         return $this->active;
     }
@@ -91,7 +100,7 @@ class User implements UserInterface
         return $this;
     }
 
-    public function getDeleted(): ?bool
+    public function isDeleted(): ?bool
     {
         return $this->deleted;
     }
@@ -104,32 +113,35 @@ class User implements UserInterface
     }
 
 
-
-
-    public function getRoles()
+    /**
+     * @return mixed
+     */
+    public function getRoles() : array
     {
         return array('ROLE_USER');
     }
 
-    public function getSalt()
+    /**
+     * @return mixed
+     */
+    public function getSalt() : string
     {
         return "";
     }
 
-    public function eraseCredentials()
+    /**
+     * @return string
+     */
+    public function getUsername() : string
     {
-        // TODO: Implement eraseCredentials() method.
+        return $this->email;
     }
 
-    public function __construct($username, $password, $salt, array $roles)
+    /**
+     * @return mixed
+     */
+    public function eraseCredentials() : void
     {
-        $this->email = $username;
-        $this->password = $password;
-        $this->salt = $salt;
-        $this->roles = array('ROLE_USER');
-    }
-    public function getUsername()
-    {
-        return $this->getEmail();
+        // TODO: Implement eraseCredentials() method.
     }
 }

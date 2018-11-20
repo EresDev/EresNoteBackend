@@ -2,47 +2,57 @@
 namespace App\Controller;
 
 use App\Entity\User;
-use App\Security\UserProvider;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
+use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTManager;
+use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Security\Core\Authentication\AuthenticationManagerInterface;
+use Symfony\Component\Security\Core\Authentication\Provider\AuthenticationProviderInterface;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Symfony\Component\Security\Csrf\TokenStorage\TokenStorageInterface;
+use Symfony\Component\Security\Http\Firewall\AbstractAuthenticationListener;
+use Symfony\Component\Security\Http\Firewall\UsernamePasswordJsonAuthenticationListener;
 
 class AuthController extends AbstractController
 {
     public function register(Request $request, EntityManagerInterface $em, UserPasswordEncoderInterface $encoder)
     {
-        $username = $request->get('username');
-        $password = $request->get('password');
-        //print_r($_POST); echo "1111"; exit;
-        $user = new UserProvider();
-        $user->setEmail($username);
-        $user->setPassw($encoder->encodePassword($user, $password));
+        $email = $request->get('email');
+        $password = $request->get('passw');
 
-        $user2 = new User();
-        $user2->setEmail($username);
-        $user2->setPassw($user->getPassw());
+        $user = new User();
+        $user->setEmail($email);
 
-        $em->persist( $user2);
+        $encoded = $encoder->encodePassword($user, $password);
+        $user->setPassword($encoded);
+
+        $em->persist( $user );
         $em->flush();
         return new Response(sprintf('User %s successfully created', $user->getEmail()));
     }
 
-    public function login(Request $request)
+    public function login(Request $request, JWTTokenManagerInterface $jwtManager, UserPasswordEncoderInterface $encoder, TokenStorageInterface $tokenStorage, AuthenticationManagerInterface $provider)
     {
         $json = $request->getContent();
         $vars = json_decode($json, true);
-        $jwtManager = $this->container
-            ->get('lexik_jwt_authentication.jwt_manager');
-        $user = new User();
-        return $this->json([
-            'vars' => $vars,
-            'message' => 'me',
-            'lasdmessage' => 'me',
-            'path' => 'pa',
-            'jwtManager' => $jwtManager->create($user),
-        ]);
+
+        $user = $tokenStorage->getToken($vars['email'])->getUser();
+
+//        $user = new User();
+//        $user->setEmail($vars['email']);
+//        $user->setPassword($encoder->encodePassword($user, $vars['passw']));
+        //$jwt = $jwtManager->create($user);
+        print_r($user);
+
+        exit;
+    }
+
+    public function testLogin(){
+//        $u = new User();
+//        $u->setEmail(1);
+        return new Response("Willkommen");
     }
 }

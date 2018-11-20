@@ -25,6 +25,8 @@
         <env name="JWT_PUBLIC_KEY" value="%kernel.project_dir%/config/jwt/public.pem"/>
         <env name="JWT_PASSPHRASE" value="0b2311aa7e37d2930e2f18cc0ea55ba7"/>
         <!-- ###- lexik/jwt-authentication-bundle ### -->
+
+        <env name="DATABASE_URL" value="mysql://root:@127.0.0.1/eresnote_test" />
     </php>
 
     <testsuites>

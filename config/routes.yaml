@@ -7,10 +7,17 @@
 #    controller: App\Controller\AuthController::register
 #    methods: POST
 
-login:
-    path: /login
-    controller: App\Controller\AuthController::login
-    methods: POST
+guest:
+  path: /api/guest/register
+  controller: App\Controller\AuthController::register
+
+willkommen:
+  path: /api/willkommen
+  controller: App\Controller\AuthController::testLogin
+
+
 
 api_login_check:
     path: /api/login_check
+
+

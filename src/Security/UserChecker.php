@@ -1,7 +1,6 @@
 <?php
 namespace App\Security;
 
-use Symfony\Component\Config\Definition\Exception\Exception;
 use Symfony\Component\Security\Core\Exception\CustomUserMessageAuthenticationException;
 use Symfony\Component\Security\Core\User\UserCheckerInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -38,11 +37,9 @@ class UserChecker implements UserCheckerInterface
     public function checkPreAuth(UserInterface $user) : void
     {
 
-
         if (!$user instanceof User) {
             return;
         }
-
         $errors = $this->validator->validate($user);
 
         if ($errors->count()) {
@@ -54,7 +51,7 @@ class UserChecker implements UserCheckerInterface
             //$errorsString = (string) $errors;
 
             throw new CustomUserMessageAuthenticationException(
-                $errors, [], 1
+                $errors, ["test" => "test"], 1
             );
 
         }
@@ -65,23 +62,20 @@ class UserChecker implements UserCheckerInterface
 
             // or to customize the message shown
             throw new CustomUserMessageAuthenticationException(
-                'Your account was deleted. Sorry about that!', [],2
+                '', [],2
             );
         }
-        throw new CustomUserMessageAuthenticationException(
-            'Your account is not active. Sorry about that!'
-        );
+
         if (!$user->isActive()) {
             //throw new AccountDeletedException('Account Not Active');
 
             // or to customize the message shown
             throw new CustomUserMessageAuthenticationException(
-                'Your account is not active. Sorry about that!'
+                'Your account is not active. Sorry about that!' , ['test' => 'test'], 1313
             );
         }
 
     }
-
     /**
      * @param UserInterface $user
      */

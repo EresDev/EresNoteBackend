@@ -34,3 +34,10 @@ services:
         class: 'App\Security\Encoder\BCryptPasswordEncoderPlus'
         arguments:
           $cost: 12
+
+#    App\EventListener\RequestListener:
+#        tags:
+#            - { name: kernel.event_listener, event: kernel.request, method: 'onLoginCheckValidateCredentials', priority: 10 }
+
+    app.jwt_token_authenticator:
+        class: App\Security\Guard\JWTTokenAuthenticator

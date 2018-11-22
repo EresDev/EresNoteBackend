@@ -36,18 +36,25 @@ class AuthController extends AbstractController
 
     public function login(Request $request, JWTTokenManagerInterface $jwtManager, UserPasswordEncoderInterface $encoder, TokenStorageInterface $tokenStorage, AuthenticationManagerInterface $provider)
     {
-        $json = $request->getContent();
-        $vars = json_decode($json, true);
+        $user = $this->getUser();
 
-        $user = $tokenStorage->getToken($vars['email'])->getUser();
+        return $this->json(array(
+            'username' => $user->getEmail(),
+            'roles' => $user->getRoles(),
+        ));
 
-//        $user = new User();
-//        $user->setEmail($vars['email']);
-//        $user->setPassword($encoder->encodePassword($user, $vars['passw']));
-        //$jwt = $jwtManager->create($user);
-        print_r($user);
-
-        exit;
+//        $json = $request->getContent();
+//        $vars = json_decode($json, true);
+//
+//        $user = $tokenStorage->getToken($vars['email'])->getUser();
+//
+////        $user = new User();
+////        $user->setEmail($vars['email']);
+////        $user->setPassword($encoder->encodePassword($user, $vars['passw']));
+//        //$jwt = $jwtManager->create($user);
+//        print_r($user);
+//
+//        exit;
     }
 
     public function testLogin(){

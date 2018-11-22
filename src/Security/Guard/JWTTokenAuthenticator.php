@@ -18,7 +18,6 @@ use Lexik\Bundle\JWTAuthenticationBundle\Security\Authentication\Token\PreAuthen
 use Lexik\Bundle\JWTAuthenticationBundle\Security\User\PayloadAwareUserProviderInterface;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
 use Lexik\Bundle\JWTAuthenticationBundle\TokenExtractor\TokenExtractorInterface;
-use Lexik\Bundle\JWTAuthenticationBundle\Security\Guard\JWTTokenAuthenticator as BaseAuthenticator;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
@@ -55,6 +54,8 @@ class JWTTokenAuthenticator extends AbstractGuardAuthenticator
      * @var TokenStorageInterface
      */
     private $preAuthenticationTokenStorage;
+
+    //private $validator;
     /**
      * @param JWTTokenManagerInterface $jwtManager
      * @param EventDispatcherInterface $dispatcher
@@ -71,7 +72,7 @@ class JWTTokenAuthenticator extends AbstractGuardAuthenticator
         $this->preAuthenticationTokenStorage = new TokenStorage();
     }
     public function supports(Request $request)
-    {
+    {   //echo $this->getTokenExtractor()->extract($request)."here"; exit;
         return false !== $this->getTokenExtractor()->extract($request);
     }
     /**
@@ -178,7 +179,6 @@ class JWTTokenAuthenticator extends AbstractGuardAuthenticator
      */
     public function checkCredentials($credentials, UserInterface $user)
     {
-        echo "We are finally here!"; exit;
         return true;
     }
     /**

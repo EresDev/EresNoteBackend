@@ -24,6 +24,10 @@ security:
             stateless: true
             anonymous: true
             provider: db_user_provider
+            guard:
+                  provider: db_user_provider
+                  authenticators:
+                      - app.jwt_token_authenticator
             json_login:
                 check_path: /api/login_check
                 success_handler: lexik_jwt_authentication.handler.authentication_success
@@ -31,6 +35,9 @@ security:
                 require_previous_session: false
                 username_path: email
                 password_path: passw
+
+
+
 
         api:
             pattern:   ^/api

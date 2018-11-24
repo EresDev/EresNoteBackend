@@ -1,13 +1,70 @@
 # api/config/api_platform/resources.yaml
 resources:
     App\Entity\User:
-      collectionOperations:
-        get: ~
-      itemOperations:
-        get: ~
+        shortName: User
+        description: 'User data.'
+        attributes:
+            access_control: 'is_granted("ROLE_USER") and object == user'
+            access_control_message: 'Sorry, but you are not the owner.'
+            normalization_context: {groups: [read]}
+            denormalization_context: {groups: [write]}
+        collectionOperations: []
+        itemOperations:
+            get: null
+            put: null
     App\Entity\Note:
-        shortName: 'Note'                   # optional
-        description: 'Saved notes of the user.' # optional
-        #iri: 'http://schema.org/Offer'       # optional
-        attributes:                          # optional
-            pagination_items_per_page: 25    # optional
+        shortName: Note
+        description: 'Saved notes of the user.'
+        attributes:
+            pagination_items_per_page: 25
+            access_control: 'is_granted("ROLE_USER") and object.getUser() == user'
+            access_control_message: 'Sorry, but you are not the note owner.'
+        collectionOperations:
+            get: {method: GET}
+        itemOperations:
+            get: {method: GET}
+            post: {method: POST}
+            put: {method: PUT}
+            delete: {method: DELETE}
+#
+#resources:
+#    App\Entity\User:
+#      attributes:
+#        access_control: 'is_granted("ROLE_USER") and object == user'
+#        access_control_message: 'Sorry, but you are not the owner.'
+#
+#        normalization_context:
+#            groups: ['read']
+#        denormalization_context:
+#            groups: ['write']
+#
+#      collectionOperations: []
+#      itemOperations:
+#        get: ~
+#        put: ~
+#
+#
+#    App\Entity\Note:
+#        shortName: 'Note'                   # optional
+#        description: 'Saved notes of the user.' # optional
+#        #iri: 'http://schema.org/Offer'       # optional
+#        attributes:                          # optional
+#            pagination_items_per_page: 25    # optional
+#            access_control: 'is_granted("ROLE_USER") and object.getUser() == user'
+#            access_control_message: 'Sorry, but you are not the note owner.'
+#        collectionOperations:
+#          get:
+#              method: 'GET'
+##              access_control: 'is_granted("ROLE_USER")'
+##              access_control_message: 'Sorry, but you are not the note owner.'
+#        itemOperations:
+#          get:
+#              method: 'GET'
+##              access_control: 'is_granted("ROLE_USER") and object.getUser() == user'
+##              access_control_message: 'Sorry, but you are not the note owner.'
+#          post:
+#              method: 'POST'
+#          put:
+#              method: 'PUT'
+#          delete:
+#              method: 'DELETE'

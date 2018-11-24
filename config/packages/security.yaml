@@ -3,8 +3,7 @@ security:
         ROLE_ADMIN:       ROLE_USER
         ROLE_SUPER_ADMIN: [ ROLE_USER, ROLE_ADMIN, ROLE_ALLOWED_TO_SWITCH ]
     encoders:
-        App\Entity\User:
-            id: app.bcrypt_plus_encoder
+        App\Entity\User: bcrypt
     providers:
         db_user_provider:
             entity:
@@ -24,10 +23,6 @@ security:
             stateless: true
             anonymous: true
             provider: db_user_provider
-            guard:
-                  provider: db_user_provider
-                  authenticators:
-                      - app.jwt_token_authenticator
             json_login:
                 check_path: /api/login_check
                 success_handler: lexik_jwt_authentication.handler.authentication_success
@@ -45,7 +40,7 @@ security:
             guard:
                 provider: db_user_provider
                 authenticators:
-                    - app.jwt_token_authenticator
+                    - lexik_jwt_authentication.jwt_token_authenticator
 
     access_control:
         - { path: ^/api/guest, roles: IS_AUTHENTICATED_ANONYMOUSLY }

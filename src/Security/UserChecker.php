@@ -6,6 +6,7 @@ use Symfony\Component\Security\Core\User\UserCheckerInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 use App\Entity\User;
+use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 /**
@@ -18,17 +19,17 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 class UserChecker implements UserCheckerInterface
 {
     /**
-     * @var ValidatorInterface
+     * @var TranslatorInterface
      */
-    private $validator;
+    private $translator;
 
     /**
      * UserChecker constructor.
-     * @param ValidatorInterface $validator
+     * @param TranslatorInterface $translator
      */
-    public function __construct(ValidatorInterface $validator)
+    public function __construct(TranslatorInterface $translator)
     {
-        $this->validator = $validator;
+        $this->translator = $translator;
     }
 
     /**
@@ -36,24 +37,8 @@ class UserChecker implements UserCheckerInterface
      */
     public function checkPreAuth(UserInterface $user) : void
     {
-
         if (!$user instanceof User) {
             return;
-        }
-        $errors = $this->validator->validate($user);
-
-        if ($errors->count()) {
-            /*
-             * Uses a __toString method on the $errors variable which is a
-             * ConstraintViolationList object. This gives us a nice string
-             * for debugging.
-             */
-            //$errorsString = (string) $errors;
-
-            throw new CustomUserMessageAuthenticationException(
-                $errors, ["test" => "test"], 1
-            );
-
         }
 
         // user is deleted, show a generic Account Not Found message.
@@ -62,7 +47,7 @@ class UserChecker implements UserCheckerInterface
 
             // or to customize the message shown
             throw new CustomUserMessageAuthenticationException(
-                '', [],2
+                $this->translator->trans('Your account has been deleted.'), [],1
             );
         }
 
@@ -71,7 +56,7 @@ class UserChecker implements UserCheckerInterface
 
             // or to customize the message shown
             throw new CustomUserMessageAuthenticationException(
-                'Your account is not active. Sorry about that!' , ['test' => 'test'], 1313
+                $this->translator->trans('Your account is not active.') , [], 2
             );
         }
 
@@ -84,6 +69,5 @@ class UserChecker implements UserCheckerInterface
         if (!$user instanceof User) {
             return;
         }
-
     }
 }

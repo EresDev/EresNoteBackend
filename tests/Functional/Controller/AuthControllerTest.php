@@ -3,6 +3,7 @@ namespace App\Tests\Functional\Controller;
 
 use Liip\FunctionalTestBundle\Test\WebTestCase;
 use Symfony\Component\BrowserKit\Client;
+use Symfony\Component\HttpFoundation\Response;
 
 class AuthControllerTest extends WebTestCase
 {
@@ -18,32 +19,114 @@ class AuthControllerTest extends WebTestCase
 
     public function testRegister(){
 
-        $this->markTestSkipped('must be revisited.');
-
         $credentials = [
-            'email' => 'arslan',
-            'passw' => 'cdss'
+            'email' => 'register_test_user@example.com',
+            'plainPassword' => [
+                'pass' => 'someValidPassword12',
+                'pass2' => 'someValidPassword12'
+            ]
         ];
 
-        $crawler = $this->client->request(
+        $this->client->request(
             'POST',
-            "/api/guest/register",
+            "/guest/register",
             $credentials,
             [],
-            ["CONTENT-TYPE" => "application/x-www-form-urlencoded", "CONTENT_TYPE" => "application/x-www-form-urlencoded"]
+            ["CONTENT-TYPE" => "application/x-www-form-urlencoded"]
 
         );
-        //print_r($this->client->getResponse());
-
-//        if (!$this->client->getResponse()->isSuccessful()) {
-//            $block = $crawler->filter('h1.exception-message');
-//            if ($block->count()) {
-//                $error = $block->text();
-//            }
-//            echo $error;
-//        }
 
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+    }
+
+
+    public function testRegister_invalidEmail(){
+
+        $credentials = [
+            'email' => 'register_test_user',
+            'plainPassword' => [
+                'pass' => 'someValidPassword12',
+                'pass2' => 'someValidPassword12'
+            ]
+        ];
+
+        $this->client->request(
+            'POST',
+            "/guest/register",
+            $credentials,
+            [],
+            ["CONTENT-TYPE" => "application/x-www-form-urlencoded"]
+        );
+
+        $this->assertEquals(Response::HTTP_BAD_REQUEST, $this->client->getResponse()->getStatusCode());
+    }
+
+    public function testRegister_emptyPassword(){
+
+        $credentials = [
+            'email' => 'register_test_user@example.com',
+            'plainPassword' => [
+                'pass' => '',
+                'pass2' => ''
+            ]
+        ];
+
+        $this->client->request(
+            'POST',
+            "/guest/register",
+            $credentials,
+            [],
+            ["CONTENT-TYPE" => "application/x-www-form-urlencoded"]
+
+        );
+
+        $this->assertEquals(Response::HTTP_BAD_REQUEST, $this->client->getResponse()->getStatusCode());
+    }
+
+
+    public function testRegister_differentPasswordAndConfirmPassword(){
+
+        $credentials = [
+            'email' => 'register_test_user@example.com',
+            'plainPassword' => [
+                'pass' => 'this_pass_1',
+                'pass2' => 'this_pass_2'
+            ]
+        ];
+
+        $this->client->request(
+            'POST',
+            "/guest/register",
+            $credentials,
+            [],
+            ["CONTENT-TYPE" => "application/x-www-form-urlencoded"]
+
+        );
+
+        $this->assertEquals(Response::HTTP_BAD_REQUEST, $this->client->getResponse()->getStatusCode());
+    }
+
+    public function testRegister_extraFieldNotAccepted(){
+
+        $credentials = [
+            'email' => 'register_test_user@example.com',
+            'plainPassword' => [
+                'pass' => 'someValidPassword12',
+                'pass2' => 'someValidPassword12'
+            ],
+            'extra_field' => 'let us see'
+        ];
+
+        $this->client->request(
+            'POST',
+            "/guest/register",
+            $credentials,
+            [],
+            ["CONTENT-TYPE" => "application/x-www-form-urlencoded"]
+
+        );
+
+        $this->assertEquals(Response::HTTP_BAD_REQUEST, $this->client->getResponse()->getStatusCode());
     }
 
     /**
@@ -51,27 +134,27 @@ class AuthControllerTest extends WebTestCase
      * But it tests login_check URL provided by LexikJWTauthenticationBundle
      */
     public function testLoginCheck_validData(){
-        $this->markTestSkipped('must be revisited.');
+
         $this->loadFixtures(array(
             'App\DataFixtures\UserFixtures'
         ));
 
-            $credentials = [
-                'email' => 'arslanafzal321@gmail.com',
-                'passw' => '3489hteur43xw21@1'
-            ];
+        $credentials = [
+            'email' => 'arslanafzal321@gmail.com',
+            'passw' => '3489hteur43xw21@1'
+        ];
 
         $this->client->request(
             'POST',
             "/api/login_check",
             [],
             [],
-            ['CONTENT_TYPE' => 'application/json', 'CONTENT-TYPE' => 'application/json'],
+            ['CONTENT_TYPE' => 'application/json'],
             json_encode($credentials)
         );
 
         $content_array = json_decode($this->client->getResponse()->getContent());
-        print_r($content_array); exit;
+
         $token = $content_array->token;
 
         $decoded_token = $this->client->getContainer()
@@ -102,7 +185,7 @@ class AuthControllerTest extends WebTestCase
             "/api/login_check",
             [],
             [],
-            ['CONTENT_TYPE' => 'application/json', 'CONTENT-TYPE' => 'application/json'],
+            ['CONTENT_TYPE' => 'application/json'],
             json_encode($credentials)
         );
 

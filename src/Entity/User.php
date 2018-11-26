@@ -57,7 +57,8 @@ class User implements UserInterface
      * This field is just for validation
      * It is not stored in database
      */
-//    private plainPassword;
+
+    private $plainPassword;
 
     public function getId(): ?int
     {
@@ -143,5 +144,15 @@ class User implements UserInterface
     public function eraseCredentials() : void
     {
         // TODO: Implement eraseCredentials() method.
+    }
+
+    public function getPlainPassword()
+    {
+        return $this->plainPassword;
+    }
+
+    public function setPlainPassword($password)
+    {
+        $this->plainPassword = $password;
     }
 }

@@ -4,6 +4,8 @@ namespace App\Tests\Unit\Security;
 use App\Entity\User;
 use App\Security\UserChecker;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 /**
  * Class UserCheckerTest
@@ -13,11 +15,16 @@ class UserCheckerTest extends TestCase
 {
     /**
      * @expectedException     Symfony\Component\Security\Core\Exception\CustomUserMessageAuthenticationException
-     * @expectedExceptionCode 3
+     * @expectedExceptionCode 2
      */
     public function testCheckPreAuth_inactiveUser(){
-        $validator = $this->createMock(\Symfony\Component\Validator\Validator\ValidatorInterface::class);
-        $userChecker = new UserChecker($validator);
+        $translator = $this->createMock(TranslatorInterface::class);
+
+        $translator
+            ->method('trans')
+            ->will($this->returnArgument(0));
+
+        $userChecker = new UserChecker($translator);
         $user = new User();
         $user->setEmail("a_test_user@example.com");
         $user->setPassword("sdfhdskj9834hjo");
@@ -30,30 +37,14 @@ class UserCheckerTest extends TestCase
      * @expectedException     Symfony\Component\Security\Core\Exception\CustomUserMessageAuthenticationException
      * @expectedExceptionCode 1
      */
-    public function testCheckPreAuth_invalidEmail(){
-        $validator = $this->createMock(\Symfony\Component\Validator\Validator\ValidatorInterface::class);
-
-        $validator
-            ->expects($this->once())
-            ->method('validate')
-            ->will($this->returnValue('invalid email'));
-
-        $userChecker = new UserChecker($validator);
-        $user = new User();
-        $user->setEmail("a_test_user");
-        $user->setPassword("sdfhdskj9834hjo");
-        $user->setDeleted(false);
-        $user->setActive(true);
-        $userChecker->checkPreAuth($user);
-    }
-
-    /**
-     * @expectedException     Symfony\Component\Security\Core\Exception\CustomUserMessageAuthenticationException
-     * @expectedExceptionCode 2
-     */
     public function testCheckPreAuth_deletedUser(){
-        $validator = $this->createMock(\Symfony\Component\Validator\Validator\ValidatorInterface::class);
-        $userChecker = new UserChecker($validator);
+        $translator = $this->createMock(TranslatorInterface::class);
+
+        $translator
+            ->method('trans')
+            ->will($this->returnArgument(0));
+
+        $userChecker = new UserChecker($translator);
         $user = new User();
         $user->setEmail("a_test_user@example.com");
         $user->setPassword("sdfhdskj9834hjo");
@@ -64,8 +55,13 @@ class UserCheckerTest extends TestCase
 
 
     public function testCheckPreAuth_validUser(){
-        $validator = $this->createMock(\Symfony\Component\Validator\Validator\ValidatorInterface::class);
-        $userChecker = new UserChecker($validator);
+        $translator = $this->createMock(TranslatorInterface::class);
+
+        $translator
+            ->method('trans')
+            ->will($this->returnArgument(0));
+
+        $userChecker = new UserChecker($translator);
         $user = new User();
         $user->setEmail("a_test_user@example.com");
         $user->setPassword("sdfhdskj9834hjo");
@@ -75,8 +71,13 @@ class UserCheckerTest extends TestCase
     }
 
     public function testCheckPostAuth(){
-        $validator = $this->createMock(\Symfony\Component\Validator\Validator\ValidatorInterface::class);
-        $userChecker = new UserChecker($validator);
+        $translator = $this->createMock(TranslatorInterface::class);
+
+        $translator
+            ->method('trans')
+            ->will($this->returnArgument(0));
+
+        $userChecker = new UserChecker($translator);
         $user = new User();
         $user->setEmail("a_test_user@example.com");
         $user->setPassword("sdfhdskj9834hjo");

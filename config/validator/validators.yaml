@@ -2,4 +2,10 @@ App\Entity\User:
     properties:
         email:
             - Email:
-                message: The email is not a valid.
+                message: 'user.email.not_valid'
+        plainPassword:
+            - NotBlank:
+                message: 'user.password.not_blank'
+            - Length:
+                min: 6
+                minMessage: 'user.password.min_length'

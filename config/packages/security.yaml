@@ -14,7 +14,7 @@ security:
                 # manager_name: customer
     firewalls:
         guest:
-            pattern: ^/api/guest
+            pattern: ^/guest
             stateless: true
             anonymous: true
         login:
@@ -43,6 +43,6 @@ security:
                     - lexik_jwt_authentication.jwt_token_authenticator
 
     access_control:
-        - { path: ^/api/guest, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/guest, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/api/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/api,       roles: IS_AUTHENTICATED_FULLY }

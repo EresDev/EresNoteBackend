@@ -8,7 +8,7 @@
 #    methods: POST
 
 guest:
-  path: /api/guest/register
+  path: /guest/register
   controller: App\Controller\AuthController::register
 
 willkommen:
@@ -19,5 +19,4 @@ willkommen:
 
 api_login_check:
     path: /api/login_check
-    #controller: App\Controller\AuthController::login
 

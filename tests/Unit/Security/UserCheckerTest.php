@@ -5,7 +5,6 @@ use App\Entity\User;
 use App\Security\UserChecker;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Translation\TranslatorInterface;
-use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 /**
  * Class UserCheckerTest

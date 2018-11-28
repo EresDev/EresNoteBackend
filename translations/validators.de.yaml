@@ -1,3 +1,4 @@
 user.email.not_valid: Der Email ist nicht gültig.
 user.password.not_blank: Das Passwort darf nicht leer sein.
 user.password.min_length: Das Passwort muss 6 Zeichen lang sein.
+user.password.mismatch: Die Passwortfelder müssen übereinstimmen.

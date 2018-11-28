@@ -7,39 +7,40 @@ use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Translation\TranslatorInterface;
 
+/**
+ * Class UserType
+ * @package App\Form
+ */
 class UserType extends AbstractType
 {
     /**
-     * @var TranslatorInterface
+     * @return string
      */
-    private $translator;
-
-    /**
-     * UserType constructor.
-     * @param TranslatorInterface $translator
-     */
-    public function __construct(TranslatorInterface $translator)
-    {
-        $this->translator = $translator;
-    }
-
     public function getName() {
         return '';
     }
+
+    /**
+     * @return null
+     */
     public function getBlockPrefix() {
         return null;
     }
+
+    /**
+     * @param FormBuilderInterface $builder
+     * @param array $options
+     */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
             ->add('email', EmailType::class)
             ->add('plainPassword', RepeatedType::class, array(
                 'type' => PasswordType::class,
-                'invalid_message' => $this->translator->trans('The password fields must match.'),
+                'invalid_message' => 'user.password.mismatch',
                 'options' => array('attr' => array('class' => 'password-field')),
                 'required' => true,
                 'first_name' => 'pass',
@@ -47,10 +48,12 @@ class UserType extends AbstractType
                 'first_options'  => array('label' => 'Password'),
                 'second_options' => array('label' => 'Confirm Password'),
             ))
-            ->add('submit', SubmitType::class, array('label' => 'Register'))
         ;
     }
 
+    /**
+     * @param OptionsResolver $resolver
+     */
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(

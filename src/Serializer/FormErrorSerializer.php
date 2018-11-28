@@ -1,15 +1,4 @@
 <?php
-/*
- * This file was copied from the FOSRestBundle package.
- *
- * (c) FriendsOfSymfony <http://friendsofsymfony.github.com/>
- *
- * For the full copyright and license information, please view the LICENSE
- * file at https://github.com/FriendsOfSymfony/FOSRestBundle/blob/master/LICENSE
- *
- * Original @author Ener-Getick <egetick@gmail.com>
- */
-
 namespace App\Serializer;
 
 use Symfony\Component\Form\FormError;

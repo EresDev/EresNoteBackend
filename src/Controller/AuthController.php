@@ -11,10 +11,21 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
-
+/**
+ * Class AuthController
+ * @package App\Controller
+ */
 class AuthController extends AbstractController
 {
-    public function register(Request $request, TranslatorInterface $translator, EntityManagerInterface $em, UserPasswordEncoderInterface $encoder, FormErrorSerializer $formErrorSerializer)
+    /**
+     * @param Request $request
+     * @param TranslatorInterface $translator
+     * @param EntityManagerInterface $em
+     * @param UserPasswordEncoderInterface $encoder
+     * @param FormErrorSerializer $formErrorSerializer
+     * @return JsonResponse
+     */
+    public function register(Request $request, TranslatorInterface $translator, EntityManagerInterface $em, UserPasswordEncoderInterface $encoder, FormErrorSerializer $formErrorSerializer) : JsonResponse
     {
         $form = $this->createForm(UserType::class);
         $form->handleRequest($request);
@@ -26,9 +37,9 @@ class AuthController extends AbstractController
             $em->persist( $user );
             $em->flush();
 
-            return new Response($translator->trans('User has been created successfully.'));
+            return new JsonResponse(['status' => 'success' , 'details' => $translator->trans('User has been created successfully.')]);
         }
 
-        return new JsonResponse($formErrorSerializer->convertFormToArray($form), Response::HTTP_BAD_REQUEST);
+        return new JsonResponse(['status' => 'error' , 'details' => $formErrorSerializer->convertFormToArray($form)], Response::HTTP_BAD_REQUEST);
     }
 }
